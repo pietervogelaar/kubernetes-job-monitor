@@ -1,0 +1,558 @@
+body {
+  font-size: 100%;
+  font-family: 'Open sans', Verdana, Helvetica, sans serif;
+  margin: 0;
+}
+.build-monitor.dashboard {
+  font-size: 0.6875em;
+}
+.build-monitor header h1 {
+  font-size: 3em;
+  letter-spacing: 0.1em;
+}
+.build-monitor nav label {
+  font-size: 1em;
+}
+.build-monitor .main {
+  font-size: 24px;
+}
+.modal-header h1 {
+  font-size: 2.5em;
+}
+.modal-body p {
+  font-size: 1.2em;
+}
+.modal textarea {
+  font-family: "Consolas", "Menlo", "Courier", monospace;
+}
+body {
+  margin: 0;
+}
+.build-monitor.dashboard {
+  height: 100vh;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  justify-content: space-between;
+  margin: auto;
+}
+.build-monitor.dashboard > header {
+  height: 58px;
+  flex-shrink: 0;
+}
+.build-monitor.dashboard > .main {
+  display: block;
+  -webkit-flex: 1 1 0px;
+  -moz-flex: 1 1 0px;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  justify-content: space-between;
+  padding: 0px 8px 4px 8px;
+}
+.build-monitor.dashboard > footer {
+  height: 24px;
+  flex-shrink: 0;
+}
+.build-monitor .main.empty {
+  -webkit-justify-content: space-around;
+  -moz-justify-content: space-around;
+  -ms-justify-content: space-around;
+  justify-content: space-around;
+  padding: 0 10%;
+  text-align: center;
+}
+.build-monitor .main.empty div.notice {
+  -webkit-box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2em;
+}
+.build-monitor .main.empty div.notice p {
+  margin: 0;
+  color: #ddd;
+}
+.build-monitor.dashboard #widgets {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  justify-content: space-between;
+  list-style-type: none;
+  margin: 4px 0 -4px -6px;
+  padding: 0;
+}
+.build-monitor.dashboard #widgets > li {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  overflow: visible;
+}
+.build-monitor.dashboard #widgets > li {
+  margin: 0 0 8px 8px;
+}
+.build-monitor.dashboard #widgets.columns-1 > li {
+  -webkit-flex: 100%;
+  -moz-flex: 100%;
+  -ms-flex: 100%;
+  flex: 100%;
+}
+.build-monitor.dashboard #widgets.columns-2 > li {
+  -webkit-flex: 49%;
+  -moz-flex: 49%;
+  -ms-flex: 49%;
+  flex: 49%;
+}
+.build-monitor.dashboard #widgets.columns-3 > li {
+  -webkit-flex: 32.333333333333336%;
+  -moz-flex: 32.333333333333336%;
+  -ms-flex: 32.333333333333336%;
+  flex: 32.333333333333336%;
+}
+.build-monitor.dashboard #widgets.columns-4 > li {
+  -webkit-flex: 24%;
+  -moz-flex: 24%;
+  -ms-flex: 24%;
+  flex: 24%;
+}
+.build-monitor.dashboard #widgets.columns-5 > li {
+  -webkit-flex: 19%;
+  -moz-flex: 19%;
+  -ms-flex: 19%;
+  flex: 19%;
+}
+.build-monitor.dashboard #widgets.columns-6 > li {
+  -webkit-flex: 15.666666666666666%;
+  -moz-flex: 15.666666666666666%;
+  -ms-flex: 15.666666666666666%;
+  flex: 15.666666666666666%;
+}
+.build-monitor.dashboard #widgets.columns-7 > li {
+  -webkit-flex: 13.285714285714286%;
+  -moz-flex: 13.285714285714286%;
+  -ms-flex: 13.285714285714286%;
+  flex: 13.285714285714286%;
+}
+.build-monitor.dashboard #widgets.columns-8 > li {
+  -webkit-flex: 11.5%;
+  -moz-flex: 11.5%;
+  -ms-flex: 11.5%;
+  flex: 11.5%;
+}
+.build-monitor.dashboard > footer {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  justify-content: space-between;
+  padding: 0 4px;
+  color: #ddd;
+}
+.build-monitor.dashboard > footer .column {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.build-monitor.dashboard > footer .column.connectivity .notifier {
+  display: inline-block;
+  margin: 2px 2px 0 6px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: #ffcf85;
+  color: #393939;
+}
+.build-monitor.dashboard > footer .column.version-info {
+  margin: 2px 4px 0 0;
+  text-align: right;
+}
+.modal {
+  font-size: 1em;
+}
+.build-monitor.colour-blind-mode .progress {
+  opacity: 0.60;
+}
+.build-monitor .project.unknown > .progress {
+  background-color: #9d9d9d;
+}
+.build-monitor .project.successful > .progress {
+  background-color: green;
+}
+.build-monitor .project.unstable > .progress {
+  background-color: #f9aa1c;
+}
+.build-monitor .project.failing > .progress {
+  background-color: firebrick;
+}
+.build-monitor .project.aborted > .progress {
+  background-color: #909090;
+}
+.build-monitor:not(.reduce-motion-mode) .project.unknown > .progress.updated {
+  -webkit-animation: forUnknown 2.25s 2 alternate;
+  -moz-animation: forUnknown 2.25s 2 alternate;
+  animation: forUnknown 2.25s 2 alternate;
+}
+.build-monitor:not(.reduce-motion-mode) .project.successful > .progress.updated {
+  -webkit-animation: forSuccessful 2.25s 2 alternate;
+  -moz-animation: forSuccessful 2.25s 2 alternate;
+  animation: forSuccessful 2.25s 2 alternate;
+}
+.build-monitor:not(.reduce-motion-mode) .project.unstable > .progress.updated {
+  -webkit-animation: forUnstable 2.25s 2 alternate;
+  -moz-animation: forUnstable 2.25s 2 alternate;
+  animation: forUnstable 2.25s 2 alternate;
+}
+.build-monitor:not(.reduce-motion-mode) .project.failing > .progress.updated {
+  -webkit-animation: forFailing 2.25s 2 alternate;
+  -moz-animation: forFailing 2.25s 2 alternate;
+  animation: forFailing 2.25s 2 alternate;
+}
+.build-monitor:not(.reduce-motion-mode) .project.aborted > .progress.updated {
+  -webkit-animation: forAborted 2.25s 2 alternate;
+  -moz-animation: forAborted 2.25s 2 alternate;
+  animation: forAborted 2.25s 2 alternate;
+}
+@-webkit-keyframes forUnknown {
+  0% {
+    background-color: #9d9d9d;
+  }
+  100% {
+    background-color: grey;
+  }
+}
+@-moz-keyframes forUnknown {
+  0% {
+    background-color: #9d9d9d;
+  }
+  100% {
+    background-color: grey;
+  }
+}
+@keyframes forUnknown {
+  0% {
+    background-color: #9d9d9d;
+  }
+  100% {
+    background-color: grey;
+  }
+}
+@-webkit-keyframes forSuccessful {
+  0% {
+    background-color: green;
+  }
+  100% {
+    background-color: limegreen;
+  }
+}
+@-moz-keyframes forSuccessful {
+  0% {
+    background-color: green;
+  }
+  100% {
+    background-color: limegreen;
+  }
+}
+@keyframes forSuccessful {
+  0% {
+    background-color: green;
+  }
+  100% {
+    background-color: limegreen;
+  }
+}
+@-webkit-keyframes forUnstable {
+  0% {
+    background-color: #f9aa1c;
+  }
+  100% {
+    background-color: #ffc500;
+  }
+}
+@-moz-keyframes forUnstable {
+  0% {
+    background-color: #f9aa1c;
+  }
+  100% {
+    background-color: #ffc500;
+  }
+}
+@keyframes forUnstable {
+  0% {
+    background-color: #f9aa1c;
+  }
+  100% {
+    background-color: #ffc500;
+  }
+}
+@-webkit-keyframes forFailing {
+  0% {
+    background-color: firebrick;
+  }
+  100% {
+    background-color: red;
+  }
+}
+@-moz-keyframes forFailing {
+  0% {
+    background-color: firebrick;
+  }
+  100% {
+    background-color: red;
+  }
+}
+@keyframes forFailing {
+  0% {
+    background-color: firebrick;
+  }
+  100% {
+    background-color: red;
+  }
+}
+@-webkit-keyframes forAborted {
+  0% {
+    background-color: #909090;
+  }
+  100% {
+    background-color: #a9a9a9;
+  }
+}
+@-moz-keyframes forAborted {
+  0% {
+    background-color: #909090;
+  }
+  100% {
+    background-color: #a9a9a9;
+  }
+}
+@keyframes forAborted {
+  0% {
+    background-color: #909090;
+  }
+  100% {
+    background-color: #a9a9a9;
+  }
+}
+.build-monitor .widget.basic.project header h2 {
+  font-size: 2.5em;
+}
+.build-monitor .widget.basic.project .slots .slot {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.build-monitor .widget.basic.project {
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: flex-end;
+  -moz-justify-content: flex-end;
+  -ms-justify-content: flex-end;
+  justify-content: flex-end;
+}
+.build-monitor .widget.basic.project header {
+  -webkit-flex: 3 2 auto;
+  -moz-flex: 3 2 auto;
+  -ms-flex: 3 2 auto;
+  flex: 3 2 auto;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: flex-end;
+  -moz-justify-content: flex-end;
+  -ms-justify-content: flex-end;
+  justify-content: flex-end;
+}
+.build-monitor .widget.basic.project .slots {
+  -webkit-flex: 2 3 auto;
+  -moz-flex: 2 3 auto;
+  -ms-flex: 2 3 auto;
+  flex: 2 3 auto;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.build-monitor .widget.basic.project .slots .slot {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: flex-end;
+  -moz-justify-content: flex-end;
+  -ms-justify-content: flex-end;
+  justify-content: flex-end;
+}
+.build-monitor .widget.basic.project {
+  position: relative;
+  border-radius: 10px;
+  overflow-y: hidden;
+  min-height: 0px;
+}
+.build-monitor .widget.basic.project header {
+  position: relative;
+  margin: 8px 8px 0 8px;
+  overflow: hidden;
+}
+.build-monitor .widget.basic.project header ul.details {
+  margin: 0.25em 0 0 0;
+  padding: 0;
+  list-style-type: none;
+  text-align: center;
+}
+.build-monitor .widget.basic.project header ul.details li {
+  margin: 0 0 0.25em 0;
+}
+.build-monitor .widget.basic.project header ul.details li.badges .badge {
+  border: 1px solid black;
+  background: lightgreen;
+  color: #000;
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin: 0 2px;
+}
+.build-monitor .widget.basic.project header .build-failure-analyzer-plugin ul.identified-failures {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+.build-monitor .widget.basic.project header .build-failure-analyzer-plugin ul.identified-failures li {
+  display: inline-block;
+  margin-right: 0.5em;
+}
+.build-monitor .widget.basic.project header .build-failure-analyzer-plugin ul.identified-failures li:after {
+  content: ",";
+}
+.build-monitor .widget.basic.project header .build-failure-analyzer-plugin ul.identified-failures li:last-child:after {
+  content: "";
+}
+.build-monitor .widget.basic.project .slots .slot-1 {
+  text-align: left;
+  padding: 0 0 4px 8px;
+}
+.build-monitor .widget.basic.project .slots .slot-2 {
+  text-align: right;
+  padding: 0 8px 4px 0;
+}
+.build-monitor .widget.basic.project > .progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0%;
+  height: 100%;
+  text-align: right;
+  overflow: hidden;
+}
+.build-monitor .widget.basic.project > .progress .value {
+  display: none;
+}
+.build-monitor .widget.basic.project .slot {
+  opacity: 0.3;
+}
+.build-monitor .widget.basic.project.running .slot {
+  opacity: 0.5;
+}
+.build-monitor .widget.basic.project {
+  -webkit-box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+}
+.build-monitor .widget.basic.project > .progress {
+  border-radius: 10px;
+}
+.rzslider span.rz-bubble {
+  color: #fff;
+}
+.rzslider span.rz-bubble.rz-limit {
+  color: #ccc;
+}
+.rzslider span.rz-pointer {
+  background-color: #f5f5f5;
+}
+.rzslider span.rz-pointer:after {
+  background-color: grey;
+}
+.rzslider span.rz-pointer:hover:after {
+  background-color: darkgrey;
+}
+.rzslider span.rz-pointer.rz-active:after {
+  background-color: black;
+}

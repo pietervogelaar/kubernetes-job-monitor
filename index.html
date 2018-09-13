@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head resURL="/job-monitor">
+    <title>Job monitor</title><link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+    <script src="yui/yahoo/yahoo-min.js"></script>
+    <script src="yui/cookie/cookie-min.js"></script>
+    <script src='org/kohsuke/stapler/bind.js' type='text/javascript'></script>
+    <div data-context-url="blue" id="blueocean-context-url"></div>
+    <link rel='stylesheet' href='io/jenkins/blueocean/try.css' type='text/css' />
+    <script src='io/jenkins/blueocean/try.js' type='text/javascript'></script>
+    <link rel="stylesheet" href="styles/normalize.css" />
+    <link rel="stylesheet" href="styles/bootstrap-combined.2.3.2.min.css" />
+    <link rel="stylesheet" href="vendor/angular-slider-5.4.0/rzslider.min.css" />
+    <link rel="stylesheet" href="themes/industrial.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="yui/cookie/cookie-min.js"></script>
+    <script src="vendor/angular-1.5.8/angular.min.js"></script>
+    <script src="vendor/angular-1.5.8/angular-sanitize.min.js"></script>
+    <script src="vendor/angular-1.5.8/angular-animate.min.js"></script>
+    <script src="vendor/modernizr.custom.27682.js"></script>
+    <script src="vendor/ng-lodash-3.10.1.min.js"></script>
+    <script src="vendor/ui-bootstrap-custom-tpls-0.4.0.js"></script>
+    <script src="vendor/angular-slugify-1.0.0.js"></script>
+    <script src="vendor/angular-slider-5.4.0/rzslider.min.js"></script>
+</head>
+<body class="build-monitor dashboard industrial" data-ng-app="buildMonitor" data-ng-controller="JobViews" data-ng-class="{ 'colour-blind-mode': settings.colourBlind == 1, 'reduce-motion-mode': settings.reduceMotion == 1 }"><header><a href="/" title="Jenkins" class="home-link">Jenkins</a><h1><a title="Configure the 'Job monitor' view">Job monitor</a></h1><nav data-ng-init="built_at = ''" data-ng-controller="controlPanel"><span data-ng-show="newVersionAvailable" class="notifications">!</span><section data-ng-class="{ showSettings:toggleSettings }"><input id="settings-toggle" type="checkbox" class="settings" data-ng-model="toggleSettings" /><label for="settings-toggle" title="Configure Build Monitor Settings">Settings</label><ul><li class="new-version-available" data-ng-show="newVersionAvailable"><h2>Good news :-)</h2><p>New version of Build Monitor is&nbsp;<a href="http://bit.ly/JBMReleases" title="Check out the release notes">available now</a>!</p><p>Upgrade via <a href="https://github.com/pietervogelaar/stackstorm-job-monitor">StackStorm Job Monitor</a></p></li><li class="settings-option"><span class="slider-label">Text scale</span><rzslider rz-slider-model="settings.fontSize" rz-slider-options="{ floor: 0.3, ceil: 2, step: 0.1, precision: 1 }"></rzslider></li><li class="settings-option"><span class="slider-label">Maximum number of columns</span><rzslider rz-slider-model="settings.numberOfColumns" rz-slider-options="{ floor: 1, ceil: 8, step: 1, precision: 0 }"></rzslider></li><li class="settings-option"><input ng-model="settings.colourBlind" ng-false-value="'0'" ng-true-value="'1'" id="settings-colour-blind" type="checkbox" /><label for="settings-colour-blind" title="Applies a colour blind-friendly colour scheme">Colour blind mode?</label></li><li class="settings-option"><input ng-model="settings.reduceMotion" ng-false-value="'0'" ng-true-value="'1'" id="settings-reduce-motion" type="checkbox" /><label for="settings-reduce-motion" title="Reduces the amount of animation Build Monitor uses">Reduce motion?</label></li><li class="settings-option"><input ng-model="settings.showBadges" ng-false-value="'0'" ng-true-value="'1'" id="settings-show-badges" type="checkbox" /><label for="settings-show-badges" title="Show the last build badges">Show badges?</label></li><li class="buttons"><a href="/#/actions" title="Configure the 'Job monitor' view" class="btn">Add/Remove Jobs</a></li><li><button class="btn btn-primary" data-ng-click="toggleSettings=false">Done</button></li></ul></section></nav></header><main class="main ng-cloak"><ul id="widgets" data-viewport-units="" data-ng-style="{ 'font-size': (fontSize * settings.fontSize) + vmax}" class="columns-{{ settings.numberOfColumns }}"><li ng-repeat="project in jobs track by project.hashCode" class="{{ project.status }} basic project widget" data-ng-class="{ 'claimed': !! project.claim.active }" id="{{ project.name | slugify }}"><div class="progress" animate-on-change="project.progress" data-ng-style="{ 'width': project.progress + '%' }"><span class="value">{{project.progress}}%</span></div><header><h2><a title="{{project.name}}" href="{{project.url}}">{{project.name}}</a></h2><ul class="details"><li data-ng-show="!  project.claim.active">{{ project.headline }}</li><li data-ng-show="!! project.lastBuild.description" class="build-description description-setter-plugin" ng-bind-html="project.lastBuild.description"></li><li data-ng-show="!! project.claim.active" class="claim-plugin">Claimed by <strong>{{ project.claim.author }}</strong>: {{ project.claim.reason }}</li><li data-ng-show="!! project.problems" class="build-failure-analyzer-plugin possible-failure-cause"><span><ng-pluralize count="project.problems.length" when="{'1': 'Identified problem: ', 'other': '{{ project.problems.length }} identified problems: '}"></ng-pluralize></span><ul class="identified-failures"><li data-ng-repeat="name in project.problems">{{ name }}</li></ul></li><li data-ng-show="settings.showBadges == 1 &amp;&amp; !!project.badges" class="badges"><span class="badge" data-ng-repeat="badge in project.badges track by $index" data-ng-style="{ 'border': badge.border + ' solid ' + badge.borderColor, 'background': badge.background, 'color': badge.color }">
+                        {{ badge.text }}
+                    </span></li></ul></header><div class="slots"><slot name="1" expansion="build-number" project="project"></slot><slot name="2" expansion="build-time" project="project"></slot></div></li></ul></main><footer><div class="connectivity column"><notifier></notifier></div><div class="version-info column">
+                    StackStorm job monitor
+                    </div></footer>
+
+            <script>
+                /*
+                 * todo: (13.08.2013) Replace the below workaround with a custom Jelly tag (ExposeBindTag)
+                 *   extending either org.kohsuke.stapler.jelly.BindTag or AbstractStaplerTag,
+                 *   that would supersede currently defective BindTag implementation:
+                 *   - https://groups.google.com/forum/#!topic/jenkinsci-dev/S9bhX4ts0g4
+                 *   - https://issues.jenkins-ci.org/browse/JENKINS-18641
+                 *
+                 *   Defect in BindTag manifests itself by causing a JavaScript error and preventing scripts after
+                 *   the <st:bind> invocation from executing, which results in an "empty Build Monitor".
+                 *   The issue occurs on Jenkins 1.521-1.526, only if the jQuery plugin is used.
+                 *
+                 * Motivation behind a custom Jelly tag:
+                 *   Original implementation of the BindTag doesn't provide an easy way of handling AJAX errors,
+                 *   which may happen if a network connection is lost or when Jenkins is restarted (which then makes
+                 *   Stapler's binding hash obsolete and Jenkins return 404 for any subsequent requests).
+                 *
+                 *   Custom Jelly tag should generate a JSON object exposing the binding, leaving the implementation
+                 *   of the proxy to the Developer. It makes more sense for a developer to require a binding adapter
+                 *   implementation specific to their JavaScript framework of choice, rather than for Stapler to try
+                 *   to predict what JavaScript libraries will ever be used with it in the future...
+                 */
+                window.originalMakeStaplerProxy = window.makeStaplerProxy;
+                window.makeStaplerProxy = function(url, crumb, methods) {
+                    return { url: url, crumb: crumb, methods: methods }
+                };
+                window.bindings={};
+            </script>
+            <script>window.bindings['buildMonitor']=makeStaplerProxy('/job-monitor','380a5a8c-285a-4a88-9be6-39df2158b76d',['fetchJobViews']);</script>
+            <script>
+                window.makeStaplerProxy = window.originalMakeStaplerProxy;
+                delete window.originalMakeStaplerProxy;
+            </script>
+            <script src="scripts/app.js"></script>
+            <script src="scripts/cron.js"></script>
+            <script src="scripts/filters.js"></script>
+            <script src="scripts/services.js"></script>
+            <script src="scripts/stats.js"></script>
+            <script src="scripts/jenkins.js"></script>
+            <script src="scripts/controllers.js"></script>
+            <script src="scripts/templates.js"></script>
+            <script src="scripts/settings.js"></script>
+            <script src="scripts/expansions/build-number.js"></script>
+            <script src="scripts/expansions/build-time.js"></script>
+            <script src="scripts/slot.js"></script>
+            <script>'use strict';
+
+                angular.
+
+                    module('buildMonitor').
+
+                    constant('BUILD_MONITOR_VERSION', '1.11+build.201701152243').
+                    constant('CSRF_CRUMB_FIELD_NAME', '.crumb').
+
+                    config(function(proxyProvider, cookieJarProvider, hashCodeProvider) {
+                        var hashCodeOf = hashCodeProvider.hashCodeOf;
+
+                        proxyProvider.configureProxiesUsing(window.bindings);
+
+                        cookieJarProvider.describe({
+                            label:     'buildMonitor.' + hashCodeOf('Job monitor'),
+                            shelfLife: 365
+                        });
+                    });</script>
+</body>
+</html>
