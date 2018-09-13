@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config.from_object('config.Configuration')
 
 
-@app.route('/fetchJobViews', methods=['GET', 'POST'])
+@app.route('/api/fetchJobViews', methods=['GET', 'POST'])
 def fetch_job_views():
     job_views = []
 

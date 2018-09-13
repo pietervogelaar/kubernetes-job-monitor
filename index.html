@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head resURL="/job-monitor">
+<head resURL="">
     <title>Job monitor</title><link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
     <script src="yui/yahoo/yahoo-min.js"></script>
     <script src="yui/cookie/cookie-min.js"></script>
@@ -57,7 +57,7 @@
                 };
                 window.bindings={};
             </script>
-            <script>window.bindings['buildMonitor']=makeStaplerProxy('/job-monitor','380a5a8c-285a-4a88-9be6-39df2158b76d',['fetchJobViews']);</script>
+            <script>window.bindings['buildMonitor']=makeStaplerProxy('/api','380a5a8c-285a-4a88-9be6-39df2158b76d',['fetchJobViews']);</script>
             <script>
                 window.makeStaplerProxy = window.originalMakeStaplerProxy;
                 delete window.originalMakeStaplerProxy;
