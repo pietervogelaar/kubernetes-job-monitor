@@ -2,12 +2,12 @@ import datetime
 import math
 
 
-def get_job_view(execution, prev_execution, stackstorm_url):
+def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
     """
     Gets a job view from the specified execution and previous execution
     :param execution: dict
     :param prev_execution: dict
-    :param stackstorm_url: string
+    :param kubernetes_dashboard_url: string
     :return: dict
     """
 
@@ -71,7 +71,7 @@ def get_job_view(execution, prev_execution, stackstorm_url):
 
     job_view = {
         'name': execution['action']['name'],
-        'url': '{}/#/history/{}/general'.format(stackstorm_url, execution['id']),
+        'url': '{}/#/history/{}/general'.format(kubernetes_dashboard_url, execution['id']),
         'status': status,
         'hashCode': hash_code,
         'progress': progress,
@@ -82,7 +82,7 @@ def get_job_view(execution, prev_execution, stackstorm_url):
             "duration": prev_build_duration,
             "description": '',
             "name": prev_build_name,
-            "url": '{}/#/history/{}/general'.format(stackstorm_url, prev_execution_id),
+            "url": '{}/#/history/{}/general'.format(kubernetes_dashboard_url, prev_execution_id),
         },
         'debug': {
             'elapsed_seconds': elapsed_seconds,

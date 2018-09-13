@@ -7,6 +7,4 @@ class Configuration(object):
     DEBUG = False
     PORT = 5000
     JSONIFY_PRETTYPRINT_REGULAR = False
-    STACKSTORM_URL = None
-    STACKSTORM_API_KEY = None
-    STACKSTORM_API_URL = None
+    KUBERNETES_DASHBOARD_URL = None
