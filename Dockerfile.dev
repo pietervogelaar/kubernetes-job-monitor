@@ -12,7 +12,7 @@ COPY requirements.txt /var/www/app
 RUN pip install -r requirements.txt && \
     mkdir -p /run/nginx
 
-COPY .container /var/www/app
+COPY .container /var/www/app/.container
 
 RUN mv .container/nginx.conf /etc/nginx/nginx.conf && \
     chown root:root /etc/nginx/nginx.conf && \
@@ -20,7 +20,8 @@ RUN mv .container/nginx.conf /etc/nginx/nginx.conf && \
     chown root:root /etc/nginx/conf.d/default.conf && \
     mv .container/supervisord.conf /etc/supervisord.conf && \
     chown root:root /etc/supervisord.conf && \
-    rm -rf .container && \
+    # Reload when a change in the source code is detected
+    sed -i -e '/bin\/gunicorn/ s/$/ --reload/' /etc/supervisord.conf && \
     # Remove /var/www/app directory, it will be mounted with source code from the host
     rm -rf /var/www/app
 
