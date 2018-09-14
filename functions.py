@@ -1,5 +1,8 @@
 import datetime
+import json
 import math
+import subprocess
+import sys
 
 
 def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
@@ -93,14 +96,58 @@ def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
     return job_view
 
 
-def grequests_exception_handler(async_request, exception):
-    # print "Request failed"
-    # print async_request.url
-    pass
+def kubectl(command, output_format=None, print_output=True):
+    """
+    Executes kubectl commands with configured parameters
+    :param command: list
+    :param output_format: None Default human terminal output, but can also be json, yaml etc.
+    :param print_output: bool
+    :return: dict|bool
+    """
+    command.insert(0, 'kubectl')
+    command.append('--kubeconfig=/etc/.kube/config')
+
+    if output_format:
+        command.append('--output={}'.format(output_format))
+
+    result = exec_command(command, False, print_output)
+
+    if result and output_format == 'json':
+        return json.loads(result['stdout'])
+    else:
+        return result
 
 
-def grequests_response_handler(response, *args, **kwargs):
-    # print response.url
-    # print response.status_code
-    # print response.text
-    pass
+def exec_command(command, shell=False, print_output=True):
+    """
+    Executes a command
+    :param command: list
+    :param shell: bool
+    :param print_output: bool
+    :return: False|dict
+    """
+    p = subprocess.Popen(command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    stdout, stderr = p.communicate()
+
+    # Decode byte string to string
+    stdout = stdout.decode()
+    stderr = stderr.decode()
+
+    if print_output:
+        # Write subprocess stdout to stdout
+        sys.stdout.write(stdout)
+
+        if stderr:
+            # Write subprocess stderr to stderr
+            print('stderr:')
+            sys.stderr.write(stderr)
+
+    if p.returncode > 0:
+        return False
+    else:
+        return {
+            'stdout': stdout,
+            'stderr': stderr,
+            'returncode': p.returncode,
+        }
