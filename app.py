@@ -12,8 +12,10 @@ def fetch_job_views():
     job_views = []
     jobs = get_jobs()
 
-    for namespace, namespace_jobs in jobs.items():
-        for job_name, job in namespace_jobs.items():
+    for namespace_key in sorted(jobs.keys()):
+        for job_key in sorted(jobs[namespace_key].keys()):
+            job = jobs[namespace_key][job_key]
+
             if 'prev_execution' in job:
                 prev_execution = job['prev_execution']
             else:
