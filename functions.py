@@ -59,7 +59,7 @@ def get_jobs():
 
             jobs[job_namespace][job_name]['execution'] = {
                 'id': job_name,
-                'job_name': job_name,
+                'job_name': '{} / {}'.format(job_namespace, job_name),
                 'job_namespace': job_namespace,
                 'start_timestamp': item['status']['startTime'],
                 'end_timestamp': end_timestamp,
