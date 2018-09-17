@@ -1,10 +1,9 @@
-from flask_env import MetaFlaskEnv
+import os
 
 
 class Configuration(object):
-    __metaclass__ = MetaFlaskEnv
 
-    DEBUG = False
-    PORT = 5000
-    JSONIFY_PRETTYPRINT_REGULAR = False
-    KUBERNETES_DASHBOARD_URL = None
+    if 'KUBERNETES_DASHBOARD_URL' in os.environ:
+        KUBERNETES_DASHBOARD_URL = os.environ['KUBERNETES_DASHBOARD_URL']
+    else:
+        KUBERNETES_DASHBOARD_URL = None

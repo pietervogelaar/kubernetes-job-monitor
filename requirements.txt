@@ -1,3 +1,2 @@
 gunicorn==19.9.0
 Flask==1.0.2
-Flask-Env==2.0.0

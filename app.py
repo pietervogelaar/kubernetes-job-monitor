@@ -8,7 +8,12 @@ app.config.from_object('config.Configuration')
 
 @app.route('/api/fetchJobViews', methods=['GET', 'POST'])
 def fetch_job_views():
-    kubernetes_dashboard_url = 'http://192.168.99.100:30000'
+
+    if app.config['KUBERNETES_DASHBOARD_URL']:
+        kubernetes_dashboard_url = app.config['KUBERNETES_DASHBOARD_URL']
+    else:
+        kubernetes_dashboard_url = 'http://my-kubernetes-cluster.local'
+
     job_views = []
     jobs = get_jobs()
 
