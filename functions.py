@@ -5,6 +5,71 @@ import subprocess
 import sys
 
 
+def get_jobs():
+    """
+    Gets jobs from Kubernetes
+    :return: dict
+    """
+    jobs = {}
+
+    data = kubectl(['get', 'jobs', '--all-namespaces', '--sort-by', '.status.startTime'], 'json', False)
+
+    if data and 'items' in data:
+        for item in data['items']:
+            job_name = None
+
+            # Determine job name from CronJob name, skip non CronJob jobs
+            if 'ownerReferences' in item['metadata']:
+                owner_reference = item['metadata']['ownerReferences'][0]
+                if owner_reference['kind'] == 'CronJob':
+                    job_name = owner_reference['name']
+
+            if not job_name:
+                continue
+
+            job_namespace = item['metadata']['namespace']
+            if job_namespace not in jobs:
+                jobs[job_namespace] = {}
+
+            if job_name not in jobs[job_namespace]:
+                jobs[job_namespace][job_name] = {}
+
+            if ('execution' in jobs[job_namespace][job_name]
+                    and not jobs[job_namespace][job_name]['execution']['active']):
+                jobs[job_namespace][job_name]['prev_execution'] = jobs[job_namespace][job_name]['execution']
+
+            if 'completionTime' in item['status'] and item['status']['completionTime']:
+                end_timestamp = item['status']['completionTime']
+            else:
+                end_timestamp = None
+
+            if 'succeeded' in item['status'] and item['status']['succeeded'] == 1:
+                status = 'succeeded'
+            elif 'failed' in item['status'] and item['status']['failed'] == 1:
+                status = 'failed'
+                end_timestamp = item['status']['conditions'][0]['lastTransitionTime']
+            else:
+                status = 'unknown'
+
+            if 'active' in item['status'] and item['status']['active'] == 1:
+                active = True
+                status = 'running'
+            else:
+                active = False
+
+            jobs[job_namespace][job_name]['execution'] = {
+                'id': job_name,
+                'job_name': job_name,
+                'job_namespace': job_namespace,
+                'start_timestamp': item['status']['startTime'],
+                'end_timestamp': end_timestamp,
+                'status': status,
+                'active': active
+            }
+
+    return jobs
+
+
 def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
     """
     Gets a job view from the specified execution and previous execution
@@ -15,34 +80,39 @@ def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
     """
 
     current_time = datetime.datetime.utcnow()
-    hash_code = abs(hash(execution['action']['name'])) % (10 ** 8)
+    hash_code = abs(hash(execution['job_name'])) % (10 ** 8)
     estimated_duration = ''
     prev_time_elapsed_since = ''
 
     if execution and 'start_timestamp' in execution:
-        start_time = datetime.datetime.strptime(execution['start_timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        start_time = datetime.datetime.strptime(execution['start_timestamp'], '%Y-%m-%dT%H:%M:%SZ')
         elapsed_seconds = int((current_time - start_time).total_seconds())
     else:
         elapsed_seconds = 0
 
-    if prev_execution and 'elapsed_seconds' in prev_execution:
-        prev_elapsed_seconds = int(math.ceil(prev_execution['elapsed_seconds']))
+    if prev_execution and 'start_timestamp' in prev_execution and 'end_timestamp' in prev_execution:
+        prev_start_time = datetime.datetime.strptime(prev_execution['start_timestamp'], '%Y-%m-%dT%H:%M:%SZ')
+        prev_end_time = datetime.datetime.strptime(prev_execution['end_timestamp'], '%Y-%m-%dT%H:%M:%SZ')
+        prev_elapsed_seconds = int((prev_end_time - prev_start_time).total_seconds())
     else:
         prev_elapsed_seconds = 0
 
     if prev_execution:
-        prev_execution_id = prev_execution['id']
         prev_build_name = prev_execution['id']
 
         if 'end_timestamp' in prev_execution:
-            prev_end_time = datetime.datetime.strptime(prev_execution['end_timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            prev_end_time = datetime.datetime.strptime(prev_execution['end_timestamp'], '%Y-%m-%dT%H:%M:%SZ')
             prev_time_elapsed_since = int((current_time - prev_end_time).total_seconds())
 
-        if 'elapsed_seconds' in prev_execution:
-            estimated_duration = '{}s'.format(int(math.ceil(prev_execution['elapsed_seconds'])))
+        estimated_duration = '{}s'.format(prev_elapsed_seconds)
+
+        prev_url = '{}/#!/cronjob/{}/{}?namespace={}'.format(kubernetes_dashboard_url,
+                                                             prev_execution['job_namespace'],
+                                                             prev_execution['id'],
+                                                             prev_execution['job_namespace'])
     else:
-        prev_execution_id = ''
         prev_build_name = ''
+        prev_url = ''
 
     prev_build_duration = estimated_duration
     progress = 0
@@ -72,9 +142,14 @@ def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
     else:
         status = 'unknown'
 
+    url = '{}/#!/cronjob/{}/{}?namespace={}'.format(kubernetes_dashboard_url,
+                                                    execution['job_namespace'],
+                                                    execution['id'],
+                                                    execution['job_namespace'])
+
     job_view = {
-        'name': execution['action']['name'],
-        'url': '{}/#/history/{}/general'.format(kubernetes_dashboard_url, execution['id']),
+        'name': execution['job_name'],
+        'url': url,
         'status': status,
         'hashCode': hash_code,
         'progress': progress,
@@ -85,7 +160,7 @@ def get_job_view(execution, prev_execution, kubernetes_dashboard_url):
             "duration": prev_build_duration,
             "description": '',
             "name": prev_build_name,
-            "url": '{}/#/history/{}/general'.format(kubernetes_dashboard_url, prev_execution_id),
+            "url": prev_url,
         },
         'debug': {
             'elapsed_seconds': elapsed_seconds,
