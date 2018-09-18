@@ -7,6 +7,9 @@ metadata:
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-a
     spec:
       backoffLimit: 0
       template:
@@ -28,6 +31,9 @@ metadata:
 spec:
   schedule: "*/3 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-b
     spec:
       backoffLimit: 0
       template:
@@ -49,6 +55,9 @@ metadata:
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-c
     spec:
       backoffLimit: 0
       template:
@@ -70,6 +79,9 @@ metadata:
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-d
     spec:
       backoffLimit: 0
       template:
@@ -91,6 +103,9 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-e
     spec:
       backoffLimit: 0
       template:
@@ -112,6 +127,9 @@ metadata:
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-f
     spec:
       backoffLimit: 0
       template:
@@ -133,6 +151,9 @@ metadata:
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: job-g
     spec:
       backoffLimit: 0
       template:

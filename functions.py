@@ -5,14 +5,28 @@ import subprocess
 import sys
 
 
-def get_jobs():
+def get_jobs(namespace=None, selector=None):
     """
     Gets jobs from Kubernetes
+    :param namespace: string
+    :param selector: string
     :return: dict
     """
     jobs = {}
 
-    data = kubectl(['get', 'jobs', '--all-namespaces', '--sort-by', '.status.startTime'], 'json', False)
+    command = ['get', 'jobs', '--sort-by', '.status.startTime']
+
+    if namespace:
+        command.append('--namespace')
+        command.append(namespace)
+    else:
+        command.append('--all-namespaces')
+
+    if selector:
+        command.append('--selector')
+        command.append(selector)
+
+    data = kubectl(command, 'json', False)
 
     if data and 'items' in data:
         for item in data['items']:

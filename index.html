@@ -93,5 +93,17 @@
                             shelfLife: 365
                         });
                     });</script>
+            <script>
+                // https://www.w3schools.com/js/js_cookies.asp
+                function setCookie(cname, cvalue, exdays) {
+                    var d = new Date();
+                    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                    var expires = "expires="+d.toUTCString();
+                    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                }
+
+                // Make current monitor URL available for the fetchJobViews request
+                setCookie('monitor_url', location.href);
+            </script>
 </body>
 </html>

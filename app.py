@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import jsonify
+from flask import request
 from functions import *
+from urllib import parse
 
 app = Flask(__name__)
 app.config.from_object('config.Configuration')
@@ -9,13 +11,21 @@ app.config.from_object('config.Configuration')
 @app.route('/api/fetchJobViews', methods=['GET', 'POST'])
 def fetch_job_views():
 
-    if app.config['KUBERNETES_DASHBOARD_URL']:
-        kubernetes_dashboard_url = app.config['KUBERNETES_DASHBOARD_URL']
+    monitor_url = request.cookies.get('monitor_url')
+    monitor_query_params = parse.parse_qs(parse.urlparse(monitor_url).query)
+
+    if 'namespace' in monitor_query_params:
+        namespace = monitor_query_params['namespace'][0]
     else:
-        kubernetes_dashboard_url = 'http://my-kubernetes-cluster.local'
+        namespace = None
+
+    if 'selector' in monitor_query_params:
+        selector = monitor_query_params['selector'][0]
+    else:
+        selector = None
 
     job_views = []
-    jobs = get_jobs()
+    jobs = get_jobs(namespace, selector)
 
     for namespace_key in sorted(jobs.keys()):
         for job_key in sorted(jobs[namespace_key].keys()):
@@ -26,14 +36,14 @@ def fetch_job_views():
             else:
                 prev_execution = None
 
-            job_view = get_job_view(job['execution'], prev_execution, kubernetes_dashboard_url)
+            job_view = get_job_view(job['execution'], prev_execution, app.config['KUBERNETES_DASHBOARD_URL'])
             job_views.append(job_view)
 
     result = {
         'data': job_views,
         'meta': {
             'response_time_ms': 0,
-        }
+        },
     }
 
     return jsonify(result)
