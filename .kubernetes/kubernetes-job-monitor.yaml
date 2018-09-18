@@ -53,7 +53,7 @@ spec:
           readOnly: true
         env:
         - name: KUBERNETES_DASHBOARD_URL
-          value: 'http://kubernetes-job-monitor.local'
+          value: 'http://kubernetes-dashboard.local'
       volumes:
       - name: kubeconfig
         secret:

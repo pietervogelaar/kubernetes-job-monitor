@@ -162,11 +162,11 @@ angular.
                 $scope.message = '';
 
                 $scope.$on('jenkins:connection-lost', function () {
-                    $scope.message = 'Communication with Jenkins mother ship is lost. Trying to reconnect...';
+                    $scope.message = 'Communication with Kubernetes mother ship is lost. Trying to reconnect...';
                 });
 
                 $scope.$on('jenkins:proxy-issue', function () {
-                    $scope.message = 'Your impatient proxy timed out with a "504" before Jenkins managed to respond. Let\'s try again...';
+                    $scope.message = 'Your impatient proxy timed out with a "504" before Kubernetes managed to respond. Let\'s try again...';
                 });
 
                 $scope.$on('jenkins:connection-reestablished', function () {

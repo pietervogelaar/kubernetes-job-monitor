@@ -3,7 +3,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-a
-  namespace: global
+  namespace: namespace-a
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -24,7 +24,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-b
-  namespace: global
+  namespace: namespace-a
 spec:
   schedule: "*/3 * * * *"
   jobTemplate:
@@ -45,7 +45,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-c
-  namespace: global
+  namespace: namespace-b
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -66,7 +66,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-d
-  namespace: global
+  namespace: namespace-a
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -87,7 +87,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-e
-  namespace: global
+  namespace: namespace-b
 spec:
   schedule: "*/2 * * * *"
   jobTemplate:
@@ -108,7 +108,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-f
-  namespace: global
+  namespace: namespace-a
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -129,7 +129,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: job-g
-  namespace: global
+  namespace: namespace-a
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
