@@ -7,4 +7,4 @@ The frontend is derived from the awesome Jenkins Build Monitor Plugin. All the d
 request to a Flask python application. The python application retrieves and combines information from kubectl into
 the proper dashboard format. View the *.py files in this repository for more info.
 
-![Kubernetes job monitor](https://hub.docker.com/r/pietervogelaar/kubernetes-job-monitor/)
+![Kubernetes job monitor](https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/docs/kubernetes-job-monitor.png)
