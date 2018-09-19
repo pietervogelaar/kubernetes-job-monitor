@@ -1,11 +1,16 @@
 from flask import Flask
 from flask import jsonify
+from flask import render_template
 from flask import request
 from functions import *
 from urllib import parse
 
 app = Flask(__name__)
 app.config.from_object('config.Configuration')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/api/fetchJobViews', methods=['GET', 'POST'])
