@@ -1,7 +1,7 @@
 # Kubernetes job monitor
 
 With Kubernetes cron jobs it's possible to execute (batch) jobs periodically. With a monitor dashboard it's
-easy to see which jobs are running and if their latest status was success or failure.
+easy to see which jobs are running and if their latest status was "succeeded" or "failed".
 
 The frontend is derived from the awesome Jenkins Build Monitor Plugin. The application uses kubectl inside
 the container to retrieve the data from Kubernetes.
@@ -62,3 +62,9 @@ of query parameters are available.
 - `?namespace=foo`
 - `?title=My Job Monitor&namespace=bar&selector=group=one`
 - `?title=My Job Monitor&selector=group=two`
+
+### Demo
+
+    kubectl create namespace namespace-a
+    kubectl create namespace namespace-b
+    kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/test-cron-jobs.yaml
