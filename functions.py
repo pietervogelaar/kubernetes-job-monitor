@@ -41,6 +41,12 @@ def get_jobs(namespace=None, selector=None):
             if not job_name:
                 continue
 
+            if 'status' in item and 'startTime' in item['status']:
+                start_timestamp = item['status']['startTime']
+            else:
+                # Skip because the job is created, but not started yet
+                continue
+
             job_namespace = item['metadata']['namespace']
             if job_namespace not in jobs:
                 jobs[job_namespace] = {}
@@ -75,7 +81,7 @@ def get_jobs(namespace=None, selector=None):
                 'id': job_name,
                 'job_name': '{} / {}'.format(job_namespace, job_name),
                 'job_namespace': job_namespace,
-                'start_timestamp': item['status']['startTime'],
+                'start_timestamp': start_timestamp,
                 'end_timestamp': end_timestamp,
                 'status': status,
                 'active': active

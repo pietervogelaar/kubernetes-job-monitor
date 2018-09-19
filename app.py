@@ -10,7 +10,9 @@ app.config.from_object('config.Configuration')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    title = request.args.get('title')
+
+    return render_template('index.html', title=title)
 
 
 @app.route('/api/fetchJobViews', methods=['GET', 'POST'])
