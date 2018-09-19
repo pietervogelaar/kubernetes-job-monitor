@@ -44,7 +44,7 @@ spec:
       containers:
       - name: kubernetes-job-monitor
         imagePullPolicy: Always
-        image: kubernetes-job-monitor:latest
+        image: pietervogelaar/kubernetes-job-monitor:latest
         ports:
         - containerPort: 80
         volumeMounts:
