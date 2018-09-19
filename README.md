@@ -68,3 +68,7 @@ of query parameters are available.
     kubectl create namespace namespace-a
     kubectl create namespace namespace-b
     kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/test-cron-jobs.yaml
+
+## References
+
+- [https://hub.docker.com/r/pietervogelaar/kubernetes-job-monitor/](https://hub.docker.com/r/pietervogelaar/kubernetes-job-monitor/)
