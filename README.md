@@ -59,8 +59,8 @@ of query parameters are available.
 
 ### Examples
 
-- `?namespace=foo`
-- `?title=My Job Monitor&namespace=bar&selector=group=one`
+- `?namespace=namespace-a`
+- `?title=My Job Monitor&namespace=namespace-a&selector=group=one`
 - `?title=My Job Monitor&selector=group=two`
 
 ### Demo
