@@ -28,12 +28,11 @@ Create the `secret.yaml` manifest:
     kind: Secret
     metadata:
       name: kubeconfig
-      namespace: global
     type: Opaque
     data:
       config: thebase64encodedlinehere
 
-Apply:
+Apply in the same namespace as the Kubernetes job monitor:
 
     kubectl apply -f secret.yaml
 
