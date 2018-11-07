@@ -15,7 +15,10 @@ the container to retrieve the data from Kubernetes.
 This option is the easiest and the recommended way of installing. The Kubernetes job monitor shows all the jobs of
 the cluster it is deployed to. Permissions are granted by a service account and cluster role.   
 
+    kubectl create namespace global
     kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/kubernetes-job-monitor.yaml
+    
+The Kubernetes job monitor is deployed to the namespace "global", but can be anything.
 
 **Note**: You should review the manifest above, to configure the correct host and Kubernetes dashboard URL for
 deep linking.
@@ -46,7 +49,8 @@ Apply in the same namespace as the Kubernetes job monitor:
 
     kubectl apply -f secret.yaml
 
-This secret will be mounted inside the container so that kubectl can use it.
+This secret will be mounted inside the container so that kubectl can use it. The apply command below deploys the
+Kubernetes job monitor to the current namespace.
 
     kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/kubernetes-job-monitor-kubeconfig.yaml
 
