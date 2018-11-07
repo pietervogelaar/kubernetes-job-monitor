@@ -10,16 +10,26 @@ the container to retrieve the data from Kubernetes.
 
 ## Installation
 
-### Kubeconfig secret
+### Inside the cluster with a service account token (recommended)
 
-The Kubernetes job monitor uses kubectl to retrieve data from the Kubernetes cluster, which requires authentication.
-The configuration for the admin user that is located at `/etc/kubernetes/admin.conf` on the Kubernetes master can be
-used. It's off course also possible to create a user that only has read access to jobs (of one namespace or
-all namespaces).
+This option is the easiest and the recommended way of installing. The Kubernetes job monitor shows all the jobs of
+the cluster it is deployed to. Permissions are granted by a service account and cluster role.   
 
-Convert the user configuration to one base64 encoded line:
+    kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/kubernetes-job-monitor.yaml
 
-    cat /etc/kubernetes/admin.conf | base64 | tr -d '\n'
+**Note**: You should review the manifest above, to configure the correct host and Kubernetes dashboard URL for
+deep linking.
+    
+### Inside a separate cluster with kubeconfig for remote monitoring
+
+This option uses a kubeconfig file instead of a service account for permissions. A kubeconfig file can
+also describe another cluster than that the Kubernetes job monitor is deployed to. So remote monitoring is possible.
+
+The user configured in the kubeconfig file must be able to get and list batch jobs. 
+
+Convert your kubeconfig file to one base64 encoded line:
+
+    cat /your/.kube/config | base64 | tr -d '\n'
 
 Create the `secret.yaml` manifest:
     
@@ -38,9 +48,7 @@ Apply in the same namespace as the Kubernetes job monitor:
 
 This secret will be mounted inside the container so that kubectl can use it.
 
-### Deployment
-
-    kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/kubernetes-job-monitor.yaml
+    kubectl apply -f https://raw.githubusercontent.com/pietervogelaar/kubernetes-job-monitor/master/.kubernetes/kubernetes-job-monitor-kubeconfig.yaml
 
 **Note**: You should review the manifest above, to configure the correct host and Kubernetes dashboard URL for
 deep linking.

@@ -235,7 +235,7 @@ def exec_command(command, shell=False, print_output=True):
 
         if stderr:
             # Write subprocess stderr to stderr
-            print('stderr:')
+            sys.stderr.write("stderr:\n")
             sys.stderr.write(stderr)
 
     if p.returncode > 0:
