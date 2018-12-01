@@ -700,7 +700,7 @@ exports.getPluginJSModulesPath = function(pluginId) {
 };
 
 exports.getCoreAssetsJSModulesPath = function(namespace) {
-    return getRootURL() + '/assets/' + namespace + '/jsmodules';
+    return getRootURL() + 'static/assets/' + namespace + '/jsmodules';
 };
 
 exports.getPluginPath = function(pluginId) {
