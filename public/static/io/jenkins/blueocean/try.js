@@ -3,7 +3,7 @@ var Version = require('./Version');
 
 function ModuleSpec(qName) {
     var qNameTokens = qName.split(":");
-    
+
     if (qNameTokens.length === 2) {
         var namespace = qNameTokens[0].trim();
         var nsTokens = namespace.split("/");
@@ -16,9 +16,9 @@ function ModuleSpec(qName) {
                 namespaceProvider = undefined;
             }
         }
-        
+
         var npmName = parseNPMName(qNameTokens[1].trim());
-        
+
         this.nsProvider = namespaceProvider;
         this.namespace = namespace;
         this.moduleName = npmName.name;
@@ -34,7 +34,7 @@ function ModuleSpec(qName) {
 
     // Attach version compatibility info
     var versions = [];
-    
+
     if (this.moduleVersion) {
         var moduleVersionTokens = this.moduleVersion.split(/[,|]+/);
 
@@ -44,7 +44,7 @@ function ModuleSpec(qName) {
             versions.push(parsedVersion);
         }
     }
-    
+
     this.moduleCompatVersions = versions;
 }
 
@@ -62,7 +62,7 @@ ModuleSpec.prototype.getLoadBundleVersion = function() {
             return version;
         }
     }
-    
+
     // If there's no specific version then we return the first
     // version in the list.
     return this.moduleCompatVersions[0];
@@ -81,15 +81,15 @@ ModuleSpec.prototype.importAs = function() {
     if (this.moduleName.charAt(0) === '.') {
         return this.moduleName;
     }
-    
+
     var version = this.getLoadBundleVersion();
     var importName = normalizePackageName(this.moduleName);
     var importNS = this.namespace;
-    
+
     if (!importNS) {
         importNS = importName;
     }
-    
+
     var importAs = importNS + ':' + importName;
     if (this.nsProvider) {
         importAs = this.nsProvider + '/' + importAs;
@@ -97,7 +97,7 @@ ModuleSpec.prototype.importAs = function() {
     if (version) {
         importAs += '@' + version.asBaseVersionString();
     }
-    
+
     return importAs;
 };
 
@@ -141,20 +141,20 @@ function parseNPMName(resourceName) {
     if (resourceName.length > 1) {
         var npmName = {};
         var orgSlashIndex = resourceName.indexOf('/');
-        
+
         if (resourceName.charAt(0) === '@' && orgSlashIndex > 0) {
             // It's an NPM org package. Strip off the org and package
             // and add it to the name. We'll get the rest then and parse
             // that.
             npmName.name = resourceName.substring(0, orgSlashIndex + 1);
-            
+
             // Remove the org part from the name and continue parsing.
             resourceName = resourceName.substring(orgSlashIndex + 1);
         } else {
             // Initialise it so we can append to it below.
             npmName.name = '';
         }
-        
+
         var versionIndex = resourceName.indexOf('@');
         if (versionIndex > 0) {
             npmName.name += resourceName.substring(0, versionIndex);
@@ -162,7 +162,7 @@ function parseNPMName(resourceName) {
         } else {
             npmName.name += resourceName;
         }
-        
+
         return npmName;
     } else {
         return {
@@ -175,14 +175,14 @@ module.exports = ModuleSpec;
 },{"./Version":2}],2:[function(require,module,exports){
 function Version(version) {
     this.raw = version;
-    
+
     // The version string must start with a digit.
     // It's not an error for it not to start with a number e.g. it can
     // be "any" and we may introduce other aliases.
     if (!version || version.length === 0 || isNaN(version.charAt(0))) {
         return;
     }
-    
+
     function normalizeToken(string) {
         // remove anything that's not a digit, a dot or an x.
         var normalized = string.replace(/[^\d]/g, '');
@@ -191,18 +191,18 @@ function Version(version) {
         }
         return normalized;
     }
-    
+
     var versionTokens = version.split('.');
-    
+
     this.prerelease = undefined;
-    
+
     var patchAndPrerelease = '';
     for (var i = 2; i < versionTokens.length; i++) {
         if (patchAndPrerelease.length > 0) {
             patchAndPrerelease += '.';
         }
         patchAndPrerelease += versionTokens[i];
-        
+
         var separatorIdx = patchAndPrerelease.indexOf('-');
         if (separatorIdx !== -1) {
             this.patch = normalizeToken(patchAndPrerelease.substring(0, separatorIdx));
@@ -211,13 +211,13 @@ function Version(version) {
             this.patch = normalizeToken(patchAndPrerelease);
         }
     }
-    
+
     if (versionTokens.length >= 2) {
         this.minor = normalizeToken(versionTokens[1]);
     }
     if (versionTokens.length >= 1) {
         this.major = normalizeToken(versionTokens[0]);
-    }    
+    }
 }
 
 Version.prototype.isSpecific = function() {
@@ -233,7 +233,7 @@ Version.prototype.isSpecific = function() {
  */
 Version.prototype.asBaseVersionString = function(separator) {
     separator = (separator ? separator : '.');
-    
+
     if (!this.major || this.major === 'x') {
         if (this.raw === 'any') {
             return this.raw;
@@ -296,24 +296,24 @@ exports.whoami = function(moduleQName) {
  */
 exports.importModule = function() {
     if (arguments.length === 1) {
-        return internal.importModule(arguments[0], onRegisterTimeout);        
+        return internal.importModule(arguments[0], onRegisterTimeout);
     }
-    
-    var moduleQNames = [];    
+
+    var moduleQNames = [];
     for (var i = 0; i < arguments.length; i++) {
         var argument = arguments[i];
         if (typeof argument === 'string') {
             moduleQNames.push(argument);
         }
     }
-    
+
     if (moduleQNames.length == 0) {
         throw new Error("No module names specified.");
     }
-    
+
     return promise.make(function (resolve, reject) {
         var fulfillments = [];
-        
+
         function onFulfillment() {
             if (fulfillments.length === moduleQNames.length) {
                 var modules = [];
@@ -325,14 +325,14 @@ exports.importModule = function() {
                         return;
                     }
                 }
-                // If we make it here, then we have fulfilled all individual promises, which 
+                // If we make it here, then we have fulfilled all individual promises, which
                 // means we can now fulfill the top level import promise.
                 resolve(modules);
             }
-        }        
-        
+        }
+
         // doRequire for each module
-        for (var i = 0; i < moduleQNames.length; i++) {           
+        for (var i = 0; i < moduleQNames.length; i++) {
             function doRequire(moduleQName) {
                 var promise = internal.importModule(moduleQName, onRegisterTimeout);
                 var fulfillment = {
@@ -351,7 +351,7 @@ exports.importModule = function() {
             }
             doRequire(moduleQNames[i]);
         }
-    }).applyArgsOnFulfill();    
+    }).applyArgsOnFulfill();
 };
 
 /**
@@ -368,7 +368,7 @@ exports.importModule = function() {
  */
 exports.requireModule = function(moduleQName) {
     var parsedModuleName = new ModuleSpec(moduleQName);
-    var module = internal.getModule(parsedModuleName);    
+    var module = internal.getModule(parsedModuleName);
     if (!module) {
         throw new Error("Unable to perform synchronous 'require' for module '" + moduleQName + "'. This module is not pre-loaded. " +
             "The module needs to have been asynchronously pre-loaded via an outer call to 'import'.");
@@ -378,10 +378,10 @@ exports.requireModule = function(moduleQName) {
 
 /**
  * Export a module.
- * 
+ *
  * @param namespace The namespace in which the module resides, or "undefined" if the modules is in
  * the "global" module namespace e.g. a Jenkins core bundle.
- * @param moduleName The name of the module. 
+ * @param moduleName The name of the module.
  * @param module The CommonJS style module, or "undefined" if we just want to notify other modules waiting on
  * the loading of this module.
  * @param onError On error callback;
@@ -425,14 +425,14 @@ exports.exportModule = function(namespace, moduleName, module, onError) {
 
 /**
  * Add a module's CSS to the browser page.
- * 
+ *
  * <p>
  * The assumption is that the CSS can be accessed at e.g.
  * {@code <rootURL>/plugin/<namespace>/jsmodules/<moduleName>/style.css} i.e.
  * the pluginId acts as the namespace.
- * 
+ *
  * @param namespace The namespace in which the module resides.
- * @param moduleName The name of the module. 
+ * @param moduleName The name of the module.
  * @param onError On error callback;
  */
 exports.addModuleCSSToPage = function(namespace, moduleName, onError) {
@@ -448,9 +448,9 @@ exports.addModuleCSSToPage = function(namespace, moduleName, onError) {
 
 /**
  * Add a plugin CSS file to the browser page.
- * 
+ *
  * @param pluginName The Jenkins plugin in which the module resides.
- * @param cssPath The CSS path. 
+ * @param cssPath The CSS path.
  * @param onError On error callback;
  */
 exports.addPluginCSSToPage = function(pluginName, cssPath, onError) {
@@ -475,8 +475,8 @@ exports.toCSSId = function (cssPath, namespace) {
 
 /**
  * Add CSS file to the browser page.
- * 
- * @param cssPath The CSS path. 
+ *
+ * @param cssPath The CSS path.
  * @param onError On error callback;
  */
 exports.addCSSToPage = function(cssPath, onError) {
@@ -505,7 +505,7 @@ exports.addCSSToPage = function(cssPath, onError) {
  *     <li><strong>error</strong>: An optional onload error function for the script element. This is called if the .js file exists but there's an error evaluating the script. It is NOT called if the .js file doesn't exist (ala 404).</li>
  *     <li><strong>removeElementOnLoad</strong>: Remove the script element after loading the script. Default is 'false'.</li>
  * </ul>
- * 
+ *
  * @param scriptSrc The script src.
  * @param options Optional script load options object. See above.
  */
@@ -524,7 +524,7 @@ exports.setRegisterTimeout = function(timeout) {
 
 /**
  * Set the Jenkins root/base URL.
- * 
+ *
  * @param rootUrl The root/base URL.
  */
 exports.setRootURL = function(rootUrl) {
@@ -586,7 +586,7 @@ exports.initJenkinsGlobal = function() {
     }
 };
 
-exports.clearJenkinsGlobal = function() {    
+exports.clearJenkinsGlobal = function() {
     jenkinsCIGlobal = undefined;
     whoami = undefined;
 };
@@ -601,7 +601,7 @@ exports.getJenkins = function() {
         exports.initJenkinsGlobal();
         jenkinsCIGlobal.rootURL = getRootURL();
         window.jenkinsCIGlobal = jenkinsCIGlobal;
-    }   
+    }
     return jenkinsCIGlobal;
 };
 
@@ -618,7 +618,7 @@ exports.getNamespace = function(namespaceName) {
     var namespace = namespaces[namespaceName];
     if (!namespace) {
         namespace = {
-            globalNS: false            
+            globalNS: false
         };
         namespaces[namespaceName] = namespace;
     }
@@ -651,12 +651,12 @@ exports.importModule = function(moduleQName, onRegisterTimeout) {
                     reject(error);
                 });
         }
-    });    
+    });
 };
 
 exports.loadModule = function(moduleSpec, onRegisterTimeout) {
     var module = exports.getModule(moduleSpec);
-    
+
     if (module) {
         // Module already loaded. This prob shouldn't happen.
         console.log("Unexpected call to 'loadModule' for a module (" + moduleSpec.moduleName + ") that's already loaded.");
@@ -670,18 +670,18 @@ exports.loadModule = function(moduleSpec, onRegisterTimeout) {
             if (typeof onRegisterTimeout !== "number") {
                 onRegisterTimeout = 10000;
             }
-            
+
             var timeoutObj = setTimeout(function () {
                 // Timed out waiting on the module to load and register itself.
                 if (!loadingModule.loaded) {
                     var moduleSpec = loadingModule.moduleSpec;
                     var errorDetail;
-                    
+
                     if (moduleSpec.namespace) {
                         errorDetail = "Timed out waiting on module '" + moduleSpec.namespace + ":" + moduleSpec.moduleName + "' to load.";
                     } else {
                         errorDetail = "Timed out waiting on module '" + moduleSpec.moduleName + "' to load.";
-                    }                    
+                    }
                     console.error('Module load failure: ' + errorDetail);
 
                     // Call the reject function and tell it we timed out
@@ -691,19 +691,19 @@ exports.loadModule = function(moduleSpec, onRegisterTimeout) {
                     });
                 }
             }, onRegisterTimeout);
-            
+
             loadingModule.waitList.push({
                 resolve: resolve,
                 timeoutObj: timeoutObj
-            });                    
+            });
         });
     }
-    
+
     var moduleNamespaceObj = exports.getModuleNamespaceObj(moduleSpec);
     var loadModuleName = moduleSpec.getLoadBundleName();
     var loadVersion = moduleSpec.getLoadBundleVersion();
     var doScriptLoad = true;
-    
+
     if (loadVersion) {
         // If a version was specified then we only do the script load if a
         // specific version was provided i.e. loading does not get triggered
@@ -715,12 +715,12 @@ exports.loadModule = function(moduleSpec, onRegisterTimeout) {
         // the module by exporting it.
         doScriptLoad = loadVersion.isSpecific();
     }
-    
+
     var loadingModule = getLoadingModule(moduleNamespaceObj, loadModuleName);
     if (!loadingModule.waitList) {
         loadingModule.waitList = [];
     }
-    loadingModule.moduleSpec = moduleSpec; 
+    loadingModule.moduleSpec = moduleSpec;
     loadingModule.loaded = false;
 
     try {
@@ -760,17 +760,17 @@ exports.addScript = function(scriptSrc, options) {
     if (!scriptSrc) {
         console.warn('Call to addScript with undefined "scriptSrc" arg.');
         return undefined;
-    }    
-    
+    }
+
     var normalizedOptions;
-    
+
     // If there's no options object, create it.
     if (typeof options === 'object') {
         normalizedOptions = options;
     } else {
         normalizedOptions = {};
     }
-    
+
     // May want to transform/map some urls.
     if (normalizedOptions.scriptSrcMap) {
         if (typeof normalizedOptions.scriptSrcMap === 'function') {
@@ -789,9 +789,9 @@ exports.addScript = function(scriptSrc, options) {
             }
         }
     }
-    
+
     normalizedOptions.scriptId = getScriptId(scriptSrc, options);
-    
+
     // set some default options
     if (normalizedOptions.async === undefined) {
         normalizedOptions.async = true;
@@ -799,7 +799,7 @@ exports.addScript = function(scriptSrc, options) {
     if (normalizedOptions.scriptSrcBase === undefined) {
         normalizedOptions.scriptSrcBase = '@root';
     }
-    
+
     if (normalizedOptions.scriptSrcBase === '@root') {
         normalizedOptions.scriptSrcBase = getRootURL() + '/';
     } else if (normalizedOptions.scriptSrcBase === '@adjunct') {
@@ -813,7 +813,7 @@ exports.addScript = function(scriptSrc, options) {
     if (script) {
         var replaceable = script.getAttribute('data-replaceable');
         if (replaceable && replaceable === 'true') {
-            // This <script> element is replaceable. In this case, 
+            // This <script> element is replaceable. In this case,
             // we remove the existing script element and add a new one of the
             // same id and with the specified src attribute.
             // Adding happens below.
@@ -850,28 +850,28 @@ exports.addScript = function(scriptSrc, options) {
             script = script.onload = script.onreadystatechange = null;
         }
     };
-    script.onload = onload; 
+    script.onload = onload;
     script.onreadystatechange = onload;
 
     script.setAttribute('id', normalizedOptions.scriptId);
     script.setAttribute('type', 'text/javascript');
     script.setAttribute('src', normalizedOptions.scriptSrcBase + scriptSrc);
     if (normalizedOptions.originalScriptSrc) {
-        script.setAttribute('data-referrer', normalizedOptions.originalScriptSrc);        
+        script.setAttribute('data-referrer', normalizedOptions.originalScriptSrc);
     }
     if (normalizedOptions.async) {
         script.setAttribute('async', normalizedOptions.async);
     }
-    
+
     head.appendChild(script);
-    
+
     return script;
 };
 
 exports.notifyModuleExported = function(moduleSpec, moduleExports) {
     var moduleNamespaceObj = exports.getModuleNamespaceObj(moduleSpec);
     var loadingModule = getLoadingModule(moduleNamespaceObj, moduleSpec.getLoadBundleName());
-    
+
     loadingModule.loaded = true;
     if (loadingModule.waitList) {
         for (var i = 0; i < loadingModule.waitList.length; i++) {
@@ -879,7 +879,7 @@ exports.notifyModuleExported = function(moduleSpec, moduleExports) {
             clearTimeout(waiter.timeoutObj);
             waiter.resolve(moduleExports);
         }
-    }    
+    }
 };
 
 exports.addModuleCSSToPage = function(namespace, moduleName) {
@@ -900,13 +900,13 @@ exports.toCSSId = function (cssPath, namespace) {
 
 exports.addCSSToPage = function(namespace, cssPath, cssElId) {
     var document = window.document;
-    
+
     if (cssElId === undefined) {
         cssElId = exports.toCSSId(cssPath, namespace);
     }
-    
+
     var cssEl = document.getElementById(cssElId);
-    
+
     if (cssEl) {
         // already added to page
         return;
@@ -1001,7 +1001,7 @@ exports.getPluginJSModulesPath = function(pluginId) {
 };
 
 exports.getCoreAssetsJSModulesPath = function(namespace) {
-    return getRootURL() + '/assets/' + namespace + '/jsmodules';
+    return getRootURL() + '/static/assets/' + namespace + '/jsmodules';
 };
 
 exports.getPluginPath = function(pluginId) {
@@ -1016,7 +1016,7 @@ exports.getHeadElement = function() {
     return docHead[0];
 };
 
-exports.setRootURL = function(url) {    
+exports.setRootURL = function(url) {
     if (!jenkinsCIGlobal) {
         exports.initJenkinsGlobal();
     }
@@ -1025,7 +1025,7 @@ exports.setRootURL = function(url) {
 
 exports.getModule = function(moduleSpec) {
     var namespace = exports.getModuleNamespaceObj(moduleSpec);
-    
+
     if (!moduleSpec.moduleVersion) {
         return namespace[moduleSpec.moduleName];
     } else {
@@ -1037,7 +1037,7 @@ exports.getModule = function(moduleSpec) {
             }
         }
     }
-    
+
     return undefined;
 };
 
@@ -1060,7 +1060,7 @@ function getScriptId(scriptSrc, config) {
         return config.scriptId;
     } else {
         return 'jenkins-script:' + scriptSrc;
-    }    
+    }
 }
 
 exports.getRootURL = getRootURL;
@@ -1068,7 +1068,7 @@ function getRootURL() {
     if (jenkinsCIGlobal && jenkinsCIGlobal.rootURL) {
         return jenkinsCIGlobal.rootURL;
     }
-    
+
     var docHead = exports.getHeadElement();
     var rootURL = getAttribute(docHead, "data-rooturl");
 
@@ -1083,7 +1083,7 @@ function getRootURL() {
     if (jenkinsCIGlobal) {
         jenkinsCIGlobal.rootURL = rootURL;
     }
-    
+
     return rootURL;
 }
 
@@ -1092,26 +1092,26 @@ function getAdjunctURL() {
     if (jenkinsCIGlobal && jenkinsCIGlobal.adjunctURL) {
         return jenkinsCIGlobal.adjunctURL;
     }
-    
+
     var docHead = exports.getHeadElement();
     var adjunctURL = getAttribute(docHead, "data-adjuncturl");
 
     if (adjunctURL === undefined || adjunctURL === null) {
         // Backward compatibility - older Jenkins do not have the adjunct url on the
-        // <head> element. Lets try getting the resurl (older jenkins) and patching it 
+        // <head> element. Lets try getting the resurl (older jenkins) and patching it
         // to be an adjunct url.
         adjunctURL = getAttribute(docHead, "resurl");
         if (adjunctURL === undefined || adjunctURL === null) {
             throw new Error("Attribute 'data-adjuncturl' not defined on the document <head> element.");
         }
-        // Replace the first occurrence of 'static/' with 'adjuncts/' 
+        // Replace the first occurrence of 'static/' with 'adjuncts/'
         adjunctURL = adjunctURL.replace('static\/', 'adjuncts\/');
     }
 
     if (jenkinsCIGlobal) {
         jenkinsCIGlobal.adjunctURL = adjunctURL;
     }
-    
+
     return adjunctURL;
 }
 
@@ -1122,13 +1122,13 @@ function createElement(name) {
 
 function getAttribute(element, attributeName) {
     var value = element.getAttribute(attributeName.toLowerCase());
-    
+
     if (value) {
         return value;
     } else {
         // try without lowercasing
         return element.getAttribute(attributeName);
-    }    
+    }
 }
 
 function getLoadingModule(moduleNamespaceObj, moduleName) {
@@ -1193,7 +1193,7 @@ APromise.prototype.applyArgsOnFulfill = function() {
 
 APromise.prototype.resolve = function (result) {
     this.state = 'FULFILLED';
-    
+
     var thePromise = this;
     function doFulfill(whenFulfilled, result) {
         if (thePromise.applyFulfillArgs) {
@@ -1202,7 +1202,7 @@ APromise.prototype.resolve = function (result) {
             whenFulfilled(result);
         }
     }
-    
+
     if (this.whenFulfilled) {
         doFulfill(this.whenFulfilled, result);
     }
@@ -1237,7 +1237,7 @@ APromise.prototype.onFulfilled = function(whenFulfilled) {
     return this;
 };
 
-APromise.prototype.onRejected = function(whenRejected) {        
+APromise.prototype.onRejected = function(whenRejected) {
     if (whenRejected) {
         this.whenRejected = whenRejected;
     }
