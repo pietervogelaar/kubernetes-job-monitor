@@ -67,7 +67,10 @@ def get_jobs(namespace=None, selector=None):
                 status = 'succeeded'
             elif 'failed' in item['status'] and item['status']['failed'] == 1:
                 status = 'failed'
-                end_timestamp = item['status']['conditions'][0]['lastTransitionTime']
+                try:
+                    end_timestamp = item['status']['conditions'][0]['lastTransitionTime']
+                except (TypeError, KeyError):
+                    pass
             else:
                 status = 'unknown'
 
@@ -208,7 +211,10 @@ def kubectl(command, output_format=None, print_output=True):
     result = exec_command(command, False, print_output)
 
     if result and output_format == 'json':
-        return json.loads(result['stdout'])
+        if result['stdout']:
+            return json.loads(result['stdout'])
+        else:
+            return False
     else:
         return result
 
