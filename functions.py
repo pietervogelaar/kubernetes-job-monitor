@@ -85,10 +85,11 @@ def get_jobs(namespace=None, selector=None):
                 'job_name': '{} / {}'.format(job_namespace, job_name),
                 'job_namespace': job_namespace,
                 'start_timestamp': start_timestamp,
-                'end_timestamp': end_timestamp,
                 'status': status,
                 'active': active
             }
+            if end_timestamp:
+                jobs[job_namespace][job_name]['execution']['end_timestamp'] = end_timestamp
 
     return jobs
 
