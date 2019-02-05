@@ -26,7 +26,7 @@ RUN mv .container/start.sh /start.sh && \
     chown root:root /etc/supervisord.conf && \
     rm -rf .container
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/start.sh"]
