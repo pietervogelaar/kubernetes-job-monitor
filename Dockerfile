@@ -1,9 +1,9 @@
-FROM python:3.7.0-alpine3.8
+FROM python:3.7.6-alpine3.11
 
 WORKDIR /var/www/app
 
-RUN apk add --no-cache bash curl findutils nginx=1.14.2-r0 supervisor=3.3.4-r1 && \
-    curl -sSO https://storage.googleapis.com/kubernetes-release/release/v1.11.1/bin/linux/amd64/kubectl && \
+RUN apk add --no-cache bash curl findutils nginx supervisor && \
+    curl -sSO https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubectl && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/kubectl && \
     mkdir /etc/.kube && \
